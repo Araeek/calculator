@@ -11,6 +11,7 @@ body {
     width: 309px;
     height: 550px;
     padding: 10px;
+    border-radius: 10px;
 }
 
 .display {
@@ -60,6 +61,6 @@ body {
     color: #000;
 }
 
-.oper {
+.oper, .equal {
     background-color: #fe9505;
 }
