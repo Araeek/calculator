@@ -6,29 +6,36 @@ const percentageButton = document.querySelector("#percentage");
 const operators = document.querySelectorAll(".oper");
 
 let memory = {
-    firstOperand: 0,
+    firstOperand: null,
     oper: "",
-    secondOperand: 0,
+    secondOperand: null,
+    waiting: false,
 };
 
 let displayContent = "";
 
 operators.forEach((operation) =>
     operation.addEventListener("click", (e) => {
-        if (memory["oper"] !== "") {
-            updateDisplay(operate(
-                memory["firstOperand"],
-                memory["oper"],
-                memory["secondOperand"]
-            ));
+        saveDisplayContent();
+        if (!memory["waiting"] && memory["oper"] !== "") {
+            memory["waiting"] = true;
+            updateDisplay(
+                operate(
+                    memory["firstOperand"],
+                    memory["oper"],
+                    memory["secondOperand"]
+                )
+            );
             memory["firstOperand"] = operate(
                 memory["firstOperand"],
                 memory["oper"],
                 memory["secondOperand"]
             );
+        } else if (!memory["waiting"]) {
+            memory["waiting"] = true;
         }
-        memory["oper"] = e.target.dataset.oper;
         displayContent = "";
+        memory["oper"] = e.target.dataset.oper;
     })
 );
 
@@ -37,23 +44,25 @@ percentageButton.addEventListener("click", () => {
 });
 
 positiveNegative.addEventListener("click", () => {
+    if (displayContent == "") {
+        return;
+    }
     displayContent *= -1;
     updateDisplay(displayContent);
-    saveDisplayContent();
 });
 
 numbers.forEach((num) =>
     num.addEventListener("click", (e) => {
         displayContent += e.target.textContent;
-        saveDisplayContent();
         updateDisplay(displayContent);
     })
 );
 
 function saveDisplayContent() {
-    if (memory["oper"] !== "") {
+    if (memory["waiting"] && displayContent != "") {
         memory["secondOperand"] = parseInt(displayContent);
-    } else {
+        memory["waiting"] = false;
+    } else if (displayContent != "") {
         memory["firstOperand"] = parseInt(displayContent);
     }
 }
@@ -65,9 +74,10 @@ function updateDisplay(value) {
 }
 
 function clearDisplay() {
-    memory["firstOperand"] = 0;
-    memory["secondOperand"] = 0;
+    memory["firstOperand"] = null;
+    memory["secondOperand"] = null;
     memory["oper"] = "";
+    memory["waiting"] = false;
     displayContent = "";
     updateDisplay("0");
 }
@@ -80,7 +90,7 @@ function operate(firstNumber, operator, secondNumber) {
             return subtract(firstNumber, secondNumber);
         case "multiply":
             return multiply(firstNumber, secondNumber);
-        case "subtract":
+        case "divide":
             return divide(firstNumber, secondNumber);
         default:
             break;
