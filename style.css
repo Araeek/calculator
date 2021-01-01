@@ -99,7 +99,8 @@ body {
     transition: all ease 0.3s;
 }
 
-.zero::before {
+
+.zero::after {
     border-radius: 40px;
 }
 

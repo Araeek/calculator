@@ -16,12 +16,12 @@ let memory = {
 
 let displayContent = "0";
 
-window.addEventListener("keydown",keypad);
+window.addEventListener("keydown", keypad);
 
 function keypad(e) {
     const key = document.querySelector(`.btn[data-code="${e.keyCode}"]`);
     key.click();
-}   
+}
 operators.forEach((operation) =>
     operation.addEventListener("click", (e) => {
         saveDisplayContent();
@@ -149,12 +149,12 @@ function subtract(a, b) {
 }
 
 function multiply(a, b) {
-    return a * b;
+    return ((a * 100000) * (b * 100000)) / 10000000000;
 }
 
 function divide(a, b) {
     if (b == 0) {
         return "Error";
     }
-    return a / b;
+    return (a * 10000000000) / (b * 10000000000);
 }
